@@ -1,0 +1,14 @@
+li {
+  cursor: pointer;
+  width: fit-content;
+}
+
+li:hover {
+  color: white;
+}
+
+.footer-wave {
+  position: absolute;
+  top: -30px;
+  width: 100%;
+}

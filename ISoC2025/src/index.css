@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+html,
+body {
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* index.css or global.css */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@font-face {
+  font-family: "CameraObscuraDEMO";
+  src: local("CameraObscuraDEMO"),
+    url("./assets/fonts/CameraObscuraDEMO.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.material-symbols-outlined {
+  color: #c4eec2;
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 700,
+  'GRAD' 0,
+  'opsz' 24,
+}
+
+.shrikhand-regular {
+  font-family: "Shrikhand", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.space-grotesk-regular {
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: title;
+  src: url("./assets/fonts/CameraObscuraDEMO.otf");
+}
+
+@font-face {
+  font-family: body2;
+  src: url("./assets/fonts/SemiBold12.ttf");
+}
+
+@font-face {
+  font-family: sub-heading;
+  src: url("./assets/fonts/Shrikhand-Regular.ttf");
+}
+
+@font-face {
+  font-family: body;
+  src: url("./assets/fonts/SpaceGrotesk-VariableFont_wght.ttf");
+}
+
+@theme {
+  --font-title: title;
+  --font-sub-heading: sub-heading;
+  --font-body: body;
+  --font-body2: body2;
+}

@@ -1,0 +1,236 @@
+.top-main-container {
+    margin: rem auto;
+    margin-bottom: 2.5rem;
+    background-color: #ebebeb;
+    padding: 7rem 1.5rem;
+    padding-bottom: 5rem;
+    border-radius: 12px;
+}
+
+.top-main-container h2 {
+    text-align: center;
+    font-size: 2.2rem;
+    margin: 0.5rem 0;
+    color: #474646;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-family: 'CameraObscuraDEMO', sans-serif;
+    padding: 1rem 1rem;
+}
+
+.top-main-container span {
+    color: #EE540E;
+}
+
+.card-main-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(410px, 1fr));
+    gap: 2.5rem;
+    padding: 1rem 10rem;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.main-box {
+    position: relative;
+    background-color: transparent;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    height: 100%;
+}
+
+/* Yellow back layer */
+.main-box::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    height: 100%;
+    width: 100%;
+    background-color: #FFD700;
+    z-index: 0;
+}
+
+/* Blue content box */
+.main-box1 {
+    position: relative;
+    background-color: #1a3cff;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.8rem 1.5rem;
+    border: #000000 solid 1px;
+    z-index: 1;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    min-height: 240px;
+    flex-grow: 1;
+}
+
+/* Image box */
+.image-box {
+    height: 170px;
+    width: 170px;
+    background-color: grey;
+    border-radius: 90%;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.images {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    border-radius: 50%;
+    display: block;
+}
+
+/* Text info */
+.details-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: .5rem;
+    flex-grow: 1;
+}
+
+.title-name {
+    font-size: 2rem;
+    font-weight: 900;
+    color: white;
+}
+
+.role {
+    font-weight: 400;
+    font-size: 1.2rem;
+    color: white;
+}
+
+/* Socials */
+.socials-container {
+    display: flex;
+    align-items: center;
+    gap: 1.8rem;
+    margin-top: .25rem;
+}
+
+.linkedin-icons{
+    color: white;
+    font-size: 1.8rem;
+    line-height: 1;
+}
+.github-icons{
+    color: white;
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.insta-icons {
+    color: white;
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.social-1:hover,
+.social-2:hover {
+    filter: brightness(1.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.socials-container .social-1:hover,
+.socials-container .social-2:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+/* Stars */
+.star-icons {
+    position: absolute;
+    top: -23px;
+    right: -35px;
+    z-index: 2;
+    padding: 4px;
+}
+
+.star-icons img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+}
+
+
+.hr {
+    margin-top: 2.5rem;
+}
+
+@media (max-width: 600px) {
+    .top-main-container {
+        padding: 1.2rem;
+        padding-bottom: 4rem;
+        padding-top: 4.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .card-main-container {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+        gap: 1.8rem;
+        justify-items: stretch;
+        align-items: stretch;
+    }
+
+    .main-box {
+        height: auto;
+    }
+
+    .main-box1 {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 1.5rem 1rem;
+        min-height: 280px;
+    }
+
+    .image-box {
+        height: 120px;
+        width: 120px;
+        min-width: 120px;
+        margin-bottom: 1rem;
+    }
+
+    .images {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .details-box {
+        gap: .6rem;
+    }
+
+    .title-name {
+        font-size: 1.8rem;
+    }
+
+    .role {
+        font-size: 1.15rem;
+    }
+
+    .socials-container {
+        justify-content: center;
+        gap: 1.2rem;
+        margin-top: 0.6rem;
+    }
+
+    .social-1, .social-2 {
+        height: 60px;
+        width: 60px;
+    }
+
+    .linkedin-icons, .insta-icons {
+        font-size: 1.6rem;
+    }
+}

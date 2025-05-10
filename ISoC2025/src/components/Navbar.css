@@ -1,0 +1,326 @@
+/* === Base Styles === */
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+body.menu-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+.no-scroll {
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* === Navbar Container === */
+.navbar {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 100vw;
+  height: 70px;
+  background-color: rgb(255, 255, 255);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: black;
+  border-radius: 0.3rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  z-index: 1000;
+  border: 1px solid rgba(16, 15, 15, 0.36);
+  transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+  box-shadow: 0 8px 20px rgba(36, 32, 32, 0.292);
+}
+
+.navbar.hidden {
+  transform: translate(-50%, -110%);
+}
+
+.navbar.visible {
+  transform: translateX(-50%);
+}
+
+/* === Logo Styles === */
+.navbar-logo {
+  height: 80px;
+  width: 80px;
+  transition: transform 0.3s ease;
+  
+}
+
+.navbar-logo:hover {
+  transform: scale(1.1);
+}
+
+.mobile-menu-logo {
+  height: 70px;
+  width: auto;
+}
+
+/* === Desktop Navigation === */
+.navbar-links {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-list {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+  font-weight: bold;
+  font-size: 1.3rem;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-list li {
+  position: relative;
+}
+
+.navbar-list li a {
+  position: relative;
+  display: inline-block;
+  padding: 0 2px;
+  color: inherit;
+  /* Remove background-color - we'll handle this differently */
+}
+
+.navbar-list li a::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: white; /* Match navbar background */
+  z-index: -1; /* Place behind text */
+}
+
+.navbar-list li a:hover {
+  color: #717171;
+  scale: 1.03;
+  transition: all 0.3s ease;
+}
+
+.navbar-list li::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #474646;
+  transition: width 0.3s ease;
+  z-index: -2; /* Place even further back */
+}
+
+.navbar-list li:hover::after {
+  width: 100%;
+}
+
+
+.disabled-link {
+  color: #858484;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* === Mobile Hamburger === */
+.hamburger {
+  display: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.dot-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+  width: 14px;
+}
+
+.dot {
+  width: 6.5px;
+  height: 6.5px;
+  background-color: black;
+  border-radius: 50%;
+}
+
+/* === Mobile Menu Overlay === */
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1001;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  touch-action: none; 
+}
+
+.mobile-menu-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-menu-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 100vw;
+  max-width: 1000px;
+  height: 100vh;
+  background-color: white;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 2rem 1.5rem;
+  overflow: hidden;
+  touch-action: none;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-menu-overlay.open .mobile-menu-container {
+  transform: translateX(0);
+}
+
+/* Mobile Menu Content */
+.mobile-menu-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.close-btn {
+  font-size: 2rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  line-height: 1;
+}
+
+.mobile-slide-list {
+  list-style: none;
+  margin: 0 0 2rem 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.mobile-slide-list a {
+  color: black;
+  text-decoration: none;
+  font-size: 1.4rem;
+  font-weight: bold;
+  display: block;
+}
+
+.register-btn {
+  border: 3px solid #bcbaba;
+  border-radius: 2rem;
+  padding: 0.8rem 1.8rem;
+  font-weight: bold;
+  background-color: transparent;
+  cursor: pointer;
+  color: black;
+  font-size: 1.3rem;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+}
+
+.register-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 1.5rem 0;
+}
+
+.mobile-social {
+  margin: 1.5rem 0;
+}
+
+.social-title {
+  font-weight: bold;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.3rem;
+  margin-bottom: 1.5rem;
+}
+
+.links a {
+  color: black;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+.mobile-policy {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.9rem;
+  color: #464646;
+}
+
+
+/* === Responsive Breakpoints === */
+@media (max-width: 768px) {
+  .navbar {
+    width: 100%;
+    height: 62px;
+    top: 0;
+    box-shadow: 0;
+  }
+  
+  .navbar-links {
+    display: none;
+  }
+  
+  .hamburger {
+    display: block;
+  }
+  
+  .navbar-logo {
+    padding-right: 0;
+    width: 60px;
+    height: 60px;
+    
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-menu-overlay {
+    display: none;
+    
+  }
+}
