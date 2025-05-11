@@ -22,13 +22,13 @@ const Sidebar = ({ activeItem, setActiveItem, open, setOpen }) => {
         //         </svg>
         //     )
         // },
-                { id: 'profile', label: 'Profile', icon: <UserRound className="scale-90" /> },
+        { id: 'profile', label: 'Profile', icon: <UserRound className="scale-90" /> },
 
         { id: 'repositories', label: 'Ongoing Projects', icon: <FolderGit className="scale-90" /> },
         // { id: 'activity', label: 'Activity', icon: <Calendar className="scale-90" /> },
         // { id: 'performance', label: 'Performance', icon: <ChartNoAxesCombined className="scale-90" /> },
         { id: 'commits', label: 'PRs', icon: <GitPullRequest className="scale-90" /> },
-        
+
     ];
 
     // Detect screen width and set the sidebar to close on mobile screens
@@ -76,7 +76,8 @@ const Sidebar = ({ activeItem, setActiveItem, open, setOpen }) => {
                                     e.preventDefault();
                                     setActiveItem(item.id);
                                 }}
-                                className={`w-full ${activeItem !== item.id && 'hover:bg-[#d9d9d9]'} hover:rounded-sm active:bg-[#fff] active:rounded-sm px-3 py-0.5 ${activeItem === item.id ? 'bg-[#d6d4d4] rounded-sm' : ''}`}
+                                className={`w-full ${activeItem !== item.id && 'hover:bg-[#f7b801]'} 
+                                text-black hover:rounded-sm active:bg-[#fff] active:rounded-sm px-3 py-0.5 ${activeItem === item.id ? 'bg-[#1e3ffa] text-white rounded-sm' : ''}`}
                             >
                                 <li className="flex items-center gap-4 py-2 justify-start">
                                     {item.icon}
@@ -94,7 +95,7 @@ const Sidebar = ({ activeItem, setActiveItem, open, setOpen }) => {
                     <button
                         key={item.id}
                         onClick={() => setActiveItem(item.id)}
-                        className={`p-1 ${activeItem === item.id ? 'text-[#000]' : 'text-gray-500'} hover:text-[#000] transition-colors duration-200`}
+                        className={`p-3 rounded-sm ${activeItem === item.id ? 'text-[#000] bg-[#f7b801]' : 'text-gray-500'} hover:text-[#000] transition-colors duration-200`}
                     >
                         {item.icon}
                     </button>

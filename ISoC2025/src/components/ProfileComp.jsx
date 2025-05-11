@@ -48,7 +48,7 @@ const ProfileComp = () => {
             {user.joinedAt.slice(0, 10)}
           </p>
         </div>
-        
+
         <div>
           <p className="text-gray-500">Followers:</p>
           <p className="text-gray-800 font-medium">{user.followers}</p>
@@ -56,6 +56,10 @@ const ProfileComp = () => {
         <div>
           <p className="text-gray-500">Following:</p>
           <p className="text-gray-800 font-medium">{user.following}</p>
+        </div>
+        <div>
+          <p>Points:</p>
+          <p className="font-medium">0</p>
         </div>
       </div>
     </div>
