@@ -10,7 +10,7 @@ const ProtectedRoute = ({ children }) => {
 
   useEffect(() => {
     if (!loading && !user && !hasShownToast.current) {
-      toast.error("You need to be logged in to access the Dashboard");
+      toast.error("Sign in to access the Dashboard");
       hasShownToast.current = true;
     }
   }, [loading, user]);
