@@ -86,112 +86,112 @@ router.get("/:userId/dashboard", ensureAuth, async (req, res) => {
     };
 
     // === 2. Commit Stats ===
-    const commitsRes = await axios.get(
-      `https://api.github.com/repos/${repoOwner}/${repoName}/commits?author=${username}&per_page=100`,
-      { headers }
-    );
+    // const commitsRes = await axios.get(
+    //   `https://api.github.com/repos/${repoOwner}/${repoName}/commits?author=${username}&per_page=100`,
+    //   { headers }
+    // );
 
-    const commitDetails = [];
+    // const commitDetails = [];
 
-    for (const c of commitsRes.data) {
-      const fullCommit = await axios.get(
-        `https://api.github.com/repos/${repoOwner}/${repoName}/commits/${c.sha}`,
-        { headers }
-      );
+    // for (const c of commitsRes.data) {
+    //   const fullCommit = await axios.get(
+    //     `https://api.github.com/repos/${repoOwner}/${repoName}/commits/${c.sha}`,
+    //     { headers }
+    //   );
 
-      const stats = fullCommit.data.stats;
-      commitDetails.push({
-        date: c.commit.author.date,
-        message: c.commit.message,
-        additions: stats.additions,
-        deletions: stats.deletions,
-        sha: c.sha,
-        url: c.html_url,
-      });
-    }
+    //   const stats = fullCommit.data.stats;
+    //   commitDetails.push({
+    //     date: c.commit.author.date,
+    //     message: c.commit.message,
+    //     additions: stats.additions,
+    //     deletions: stats.deletions,
+    //     sha: c.sha,
+    //     url: c.html_url,
+    //   });
+    // }
 
-    const commitStats = {
-      repo: repoName,
-      totalCommits: commitDetails.length,
-      commits: commitDetails,
-    };
+    // const commitStats = {
+    //   repo: repoName,
+    //   totalCommits: commitDetails.length,
+    //   commits: commitDetails,
+    // };
 
-    // === 3. Quality Metrics ===
-    const reposRes = await axios.get(
-      `https://api.github.com/orgs/${repoOwner}/repos`,
-      { headers }
-    );
-    const repos = reposRes.data;
+    // // === 3. Quality Metrics ===
+    // const reposRes = await axios.get(
+    //   `https://api.github.com/orgs/${repoOwner}/repos`,
+    //   { headers }
+    // );
+    // const repos = reposRes.data;
 
-    const repoCount = repos.length;
-    const activeProjects = repos.filter(
-      (r) =>
-        new Date(r.updated_at) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
-    ).length;
-    const popularity = repos.reduce((sum, r) => sum + r.stargazers_count, 0);
+    // const repoCount = repos.length;
+    // const activeProjects = repos.filter(
+    //   (r) =>
+    //     new Date(r.updated_at) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+    // ).length;
+    // const popularity = repos.reduce((sum, r) => sum + r.stargazers_count, 0);
 
-    let communityEngagement = 0;
-    const resolutionBuckets = { Critical: [], High: [], Medium: [], Low: [] };
+    // let communityEngagement = 0;
+    // const resolutionBuckets = { Critical: [], High: [], Medium: [], Low: [] };
 
-    for (const repo of repos) {
-      const issuesRes = await axios.get(
-        `https://api.github.com/repos/${repoOwner}/${repo.name}/issues`,
-        { headers, params: { state: "closed", per_page: 100 } }
-      );
-      for (const issue of issuesRes.data) {
-        if (issue.pull_request) continue;
-        communityEngagement++;
-        const labels = issue.labels.map((l) => l.name);
-        const created = new Date(issue.created_at);
-        const closed = new Date(issue.closed_at);
-        for (const label of labels) {
-          const key = ["Critical", "High", "Medium", "Low"].find(
-            (lvl) => lvl.toLowerCase() === label.toLowerCase()
-          );
-          if (key)
-            resolutionBuckets[key].push(
-              (closed - created) / (1000 * 60 * 60 * 24)
-            );
-        }
-      }
-    }
+    // for (const repo of repos) {
+    //   const issuesRes = await axios.get(
+    //     `https://api.github.com/repos/${repoOwner}/${repo.name}/issues`,
+    //     { headers, params: { state: "closed", per_page: 100 } }
+    //   );
+    //   for (const issue of issuesRes.data) {
+    //     if (issue.pull_request) continue;
+    //     communityEngagement++;
+    //     const labels = issue.labels.map((l) => l.name);
+    //     const created = new Date(issue.created_at);
+    //     const closed = new Date(issue.closed_at);
+    //     for (const label of labels) {
+    //       const key = ["Critical", "High", "Medium", "Low"].find(
+    //         (lvl) => lvl.toLowerCase() === label.toLowerCase()
+    //       );
+    //       if (key)
+    //         resolutionBuckets[key].push(
+    //           (closed - created) / (1000 * 60 * 60 * 24)
+    //         );
+    //     }
+    //   }
+    // }
 
-    const resolutionTime = {};
-    for (const level in resolutionBuckets) {
-      const arr = resolutionBuckets[level];
-      resolutionTime[level] = arr.length
-        ? arr.reduce((a, b) => a + b, 0) / arr.length
-        : 0;
-    }
+    // const resolutionTime = {};
+    // for (const level in resolutionBuckets) {
+    //   const arr = resolutionBuckets[level];
+    //   resolutionTime[level] = arr.length
+    //     ? arr.reduce((a, b) => a + b, 0) / arr.length
+    //     : 0;
+    // }
 
-    const qualityData = {
-      repoCount,
-      popularity,
-      activeProjects,
-      communityEngagement,
-      resolutionTime,
-    };
+    // const qualityData = {
+    //   repoCount,
+    //   popularity,
+    //   activeProjects,
+    //   communityEngagement,
+    //   resolutionTime,
+    // };
 
-    console.log("data:", {
-      detailedPRs,
-      pullRequestData,
-      commitStats,
-      qualityData,
-    });
+    // console.log("data:", {
+    //   detailedPRs,
+    //   pullRequestData,
+    //   commitStats,
+    //   qualityData,
+    // });
 
     // Save to user (optional)
     await User.findByIdAndUpdate(userId, {
   pullRequests: detailedPRs,
   pullRequestData,
-  commitStats,
-  qualityData
+  // commitStats,
+  // qualityData
 });
 
     res.status(200).json({
       message: "Dashboard data loaded",
       pullRequestData,
-      commitStats,
-      qualityData,
+      // commitStats,
+      // qualityData,
     });
   } catch (err) {
     console.error("Dashboard fetch error:", err.message);

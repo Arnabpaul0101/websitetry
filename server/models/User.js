@@ -1,14 +1,5 @@
 const mongoose = require("mongoose");
 
-const commitSchema = new mongoose.Schema({
-  date: Date,
-  message: String,
-  additions: Number,
-  deletions: Number,
-  sha: String,
-  url: String,
-});
-
 const prSchema = new mongoose.Schema({
   id: Number,
   number: Number,
@@ -23,30 +14,11 @@ const prSchema = new mongoose.Schema({
   repo: String,
 });
 
-const commitStatsSchema = new mongoose.Schema({
-  repo: String,
-  totalCommits: Number,
-  commits: [commitSchema],
-});
-
 const pullRequestDataSchema = new mongoose.Schema({
   total: Number,
   open: Number,
   closed: Number,
   avgMergeTime: Number,
-});
-
-const qualityDataSchema = new mongoose.Schema({
-  repoCount: Number,
-  popularity: Number,
-  activeProjects: Number,
-  communityEngagement: Number,
-  resolutionTime: {
-    Critical: Number,
-    High: Number,
-    Medium: Number,
-    Low: Number,
-  },
 });
 
 const userSchema = new mongoose.Schema({
@@ -62,9 +34,7 @@ const userSchema = new mongoose.Schema({
   followers: Number,
   following: Number,
   pullRequests: [prSchema],
-  commitStats: [commitStatsSchema],
   pullRequestData: pullRequestDataSchema,
-  qualityData: qualityDataSchema,
 });
 
 module.exports = mongoose.model("User", userSchema);
