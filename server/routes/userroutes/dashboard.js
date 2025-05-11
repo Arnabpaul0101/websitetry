@@ -2,18 +2,26 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 const User = require("../../models/User");
+const Repo = require("../../models/Repo");
 
-// Auth middleware (ensure user is logged in)
+// Auth middleware
 const ensureAuth = (req, res, next) => {
   if (req.isAuthenticated()) return next();
   return res.status(401).json({ message: "Unauthorized" });
 };
 
+// Sleep helper
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 router.get("/:userId/dashboard", ensureAuth, async (req, res) => {
-    console.log("Dashboard route hit");
+  console.log("Dashboard route hit");
   const { userId } = req.params;
 
   try {
+    // Fetch all repos stored in DB
+    const repos = await Repo.find({});
+    console.log("Repos from DB:", repos.length);
+
     const user = await User.findById(userId);
     if (!user || !user.accessToken)
       return res.status(404).json({ message: "User not found" });
@@ -25,173 +33,143 @@ router.get("/:userId/dashboard", ensureAuth, async (req, res) => {
       "User-Agent": "IEEE-SOC-App",
     };
 
-    const repoOwner = "ieee-cs-bmsit";
-    const repoName = "ISoC2025";
+    let allPRs = [];
+    let mergedDurations = [];
+    let detailedPRs = [];
 
-    // === 1. Pull Requests ===
-    const q = `repo:${repoOwner}/${repoName} type:pr author:${username}`;
-    let page = 1,
-      allPRs = [];
+    for (const repo of repos) {
+      let repoUrl = repo.url;
 
-    while (true) {
-      const resPR = await axios.get("https://api.github.com/search/issues", {
-        headers,
-        params: { q, per_page: 100, page },
-      });
-      if (resPR.data.items.length === 0) break;
-      allPRs.push(...resPR.data.items);
-      page++;
-    }
-
-    let mergedDurations = [],
-      detailedPRs = [];
-
-    for (const pr of allPRs) {
-      const prDetails = await axios.get(
-        `https://api.github.com/repos/${repoOwner}/${repoName}/pulls/${pr.number}`,
-        { headers }
-      );
-
-      const prData = prDetails.data;
-      if (prData.merged_at) {
-        const created = new Date(prData.created_at);
-        const merged = new Date(prData.merged_at);
-        mergedDurations.push((merged - created) / (1000 * 60 * 60 * 24));
+      // Convert GitHub HTML URL to API URL
+      if (repoUrl.startsWith("https://github.com/")) {
+        const parts = repoUrl.replace("https://github.com/", "").split("/");
+        if (parts.length >= 2) {
+          const owner = parts[0];
+          const name = parts[1];
+          repoUrl = `https://api.github.com/repos/${owner}/${name}`;
+          console.log("Converted repo URL:", repoUrl);
+        } else {
+          console.warn("Invalid GitHub HTML repo URL:", repo.url);
+          continue;
+        }
       }
 
-      detailedPRs.push({
-        id: prData.id,
-        number: prData.number,
-        title: prData.title,
-        state: prData.state,
-        created_at: prData.created_at,
-        updated_at: prData.updated_at,
-        html_url: prData.html_url,
-        status: prData.merged_at ? "merged" : prData.state,
-        merged: !!prData.merged_at,
-        merged_at: prData.merged_at,
-        repo: `${repoOwner}/${repoName}`,
-      });
+      const match = repoUrl.match(/repos\/([^/]+)\/([^/]+)$/);
+      if (!match) {
+        console.warn("Unrecognized repo URL format:", repoUrl);
+        continue;
+      }
+      const [_, owner, name] = match;
+
+      const q = `repo:${owner}/${name} type:pr author:${username}`;
+      let prPage = 1;
+
+      while (true) {
+        try {
+          const resPR = await axios.get(
+            "https://api.github.com/search/issues",
+            {
+              headers,
+              params: { q, per_page: 100, page: prPage },
+            }
+          );
+
+          const items = resPR.data.items.filter((item) => item.pull_request);
+          if (items.length === 0) break;
+
+          const repoPRs = items.map((item) => ({
+            ...item,
+            repoOwner: owner,
+            repoName: name,
+          }));
+          allPRs.push(...repoPRs);
+          prPage++;
+
+          await sleep(300); // delay to avoid abuse detection
+        } catch (err) {
+          if (
+            err.response?.status === 403 &&
+            err.response.headers["x-ratelimit-remaining"] === "0"
+          ) {
+            const reset =
+              parseInt(err.response.headers["x-ratelimit-reset"]) * 1000;
+            const waitTime = reset - Date.now();
+            console.warn(
+              `Rate limit hit. Waiting ${Math.ceil(
+                waitTime / 1000
+              )}s before retrying...`
+            );
+            await sleep(waitTime + 1000); // extra 1s buffer
+            continue; // retry same page
+          }
+
+          console.warn(
+            `Error fetching PRs for ${owner}/${name}: ${err.message}`
+          );
+          break;
+        }
+      }
+
+      for (const pr of allPRs.filter(
+        (p) => p.repoOwner === owner && p.repoName === name
+      )) {
+        try {
+          await sleep(300); // avoid burst request
+
+          const prDetails = await axios.get(
+            `https://api.github.com/repos/${owner}/${name}/pulls/${pr.number}`,
+            { headers }
+          );
+
+          const prData = prDetails.data;
+          if (prData.merged_at) {
+            const created = new Date(prData.created_at);
+            const merged = new Date(prData.merged_at);
+            mergedDurations.push((merged - created) / (1000 * 60 * 60 * 24)); // days
+          }
+
+          detailedPRs.push({
+            id: prData.id,
+            number: prData.number,
+            title: prData.title,
+            state: prData.state,
+            created_at: prData.created_at,
+            updated_at: prData.updated_at,
+            html_url: prData.html_url,
+            status: prData.merged_at ? "merged" : prData.state,
+            merged: !!prData.merged_at,
+            merged_at: prData.merged_at,
+            repo: `${owner}/${name}`,
+          });
+        } catch (err) {
+          console.warn(
+            `Failed to fetch PR #${pr.number} from ${owner}/${name}: ${err.response?.status} ${err.response?.statusText}`
+          );
+        }
+      }
     }
 
+    // PR Summary
     const pullRequestData = {
       total: detailedPRs.length,
       open: detailedPRs.filter((pr) => pr.state === "open").length,
-      closed: detailedPRs.filter(
-        (pr) => pr.state === "closed" || pr.status === "merged"
-      ).length,
+      closed: detailedPRs.filter((pr) => pr.state === "closed").length,
+      merged: detailedPRs.filter((pr) => pr.merged).length,
       avgMergeTime: mergedDurations.length
         ? mergedDurations.reduce((a, b) => a + b, 0) / mergedDurations.length
         : 0,
     };
 
-    // === 2. Commit Stats ===
-    // const commitsRes = await axios.get(
-    //   `https://api.github.com/repos/${repoOwner}/${repoName}/commits?author=${username}&per_page=100`,
-    //   { headers }
-    // );
-
-    // const commitDetails = [];
-
-    // for (const c of commitsRes.data) {
-    //   const fullCommit = await axios.get(
-    //     `https://api.github.com/repos/${repoOwner}/${repoName}/commits/${c.sha}`,
-    //     { headers }
-    //   );
-
-    //   const stats = fullCommit.data.stats;
-    //   commitDetails.push({
-    //     date: c.commit.author.date,
-    //     message: c.commit.message,
-    //     additions: stats.additions,
-    //     deletions: stats.deletions,
-    //     sha: c.sha,
-    //     url: c.html_url,
-    //   });
-    // }
-
-    // const commitStats = {
-    //   repo: repoName,
-    //   totalCommits: commitDetails.length,
-    //   commits: commitDetails,
-    // };
-
-    // // === 3. Quality Metrics ===
-    // const reposRes = await axios.get(
-    //   `https://api.github.com/orgs/${repoOwner}/repos`,
-    //   { headers }
-    // );
-    // const repos = reposRes.data;
-
-    // const repoCount = repos.length;
-    // const activeProjects = repos.filter(
-    //   (r) =>
-    //     new Date(r.updated_at) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
-    // ).length;
-    // const popularity = repos.reduce((sum, r) => sum + r.stargazers_count, 0);
-
-    // let communityEngagement = 0;
-    // const resolutionBuckets = { Critical: [], High: [], Medium: [], Low: [] };
-
-    // for (const repo of repos) {
-    //   const issuesRes = await axios.get(
-    //     `https://api.github.com/repos/${repoOwner}/${repo.name}/issues`,
-    //     { headers, params: { state: "closed", per_page: 100 } }
-    //   );
-    //   for (const issue of issuesRes.data) {
-    //     if (issue.pull_request) continue;
-    //     communityEngagement++;
-    //     const labels = issue.labels.map((l) => l.name);
-    //     const created = new Date(issue.created_at);
-    //     const closed = new Date(issue.closed_at);
-    //     for (const label of labels) {
-    //       const key = ["Critical", "High", "Medium", "Low"].find(
-    //         (lvl) => lvl.toLowerCase() === label.toLowerCase()
-    //       );
-    //       if (key)
-    //         resolutionBuckets[key].push(
-    //           (closed - created) / (1000 * 60 * 60 * 24)
-    //         );
-    //     }
-    //   }
-    // }
-
-    // const resolutionTime = {};
-    // for (const level in resolutionBuckets) {
-    //   const arr = resolutionBuckets[level];
-    //   resolutionTime[level] = arr.length
-    //     ? arr.reduce((a, b) => a + b, 0) / arr.length
-    //     : 0;
-    // }
-
-    // const qualityData = {
-    //   repoCount,
-    //   popularity,
-    //   activeProjects,
-    //   communityEngagement,
-    //   resolutionTime,
-    // };
-
-    // console.log("data:", {
-    //   detailedPRs,
-    //   pullRequestData,
-    //   commitStats,
-    //   qualityData,
-    // });
-
     // Save to user (optional)
     await User.findByIdAndUpdate(userId, {
-  pullRequests: detailedPRs,
-  pullRequestData,
-  // commitStats,
-  // qualityData
-});
+      pullRequests: detailedPRs,
+      pullRequestData,
+    });
 
     res.status(200).json({
       message: "Dashboard data loaded",
       pullRequestData,
-      // commitStats,
-      // qualityData,
+      pullRequests: detailedPRs,
     });
   } catch (err) {
     console.error("Dashboard fetch error:", err.message);
