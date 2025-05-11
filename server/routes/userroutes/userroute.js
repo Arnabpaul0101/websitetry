@@ -54,5 +54,24 @@ router.get('/:userId/repos', async (req, res) => {
   }
 });
 
+router.delete('/:userId/repos/:repoId', async (req, res) => {
+  const { userId, repoId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.ongoingprojects = user.ongoingprojects.filter(
+      (project) => project.toString() !== repoId
+    );
+
+    await user.save();
+
+    res.status(200).json({ message: 'Repo removed from ongoing projects' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 
 module.exports = router;
