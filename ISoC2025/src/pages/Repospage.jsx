@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-// import reposData from "../data/Reposdata";
-import Header from "../components/Header";
+import reposData from "../data/Reposdata";
 import Footer from "../components/Footer";
 import { motion } from "framer-motion";
 
@@ -19,28 +18,14 @@ const cardVariants = {
 };
 
 const ReposPage = () => {
-  const [repos, setRepos] = useState([]);
+  const [repos, setRepos] = useState(reposData);
   const [search, setSearch] = useState("");
   const [selecteddomain, setSelecteddomain] = useState("All");
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
-
-    useEffect(() => {
-    const fetchRepos = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/api/repos");
-        const data = await response.json();
-        console.log(data);
-        setRepos(data);
-      } catch (error) {
-        console.error("Error fetching repositories:", error);
-      }
-    };
-    fetchRepos();
+    setRepos(reposData); // Set repos from local data
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
   
@@ -81,9 +66,8 @@ const ReposPage = () => {
           }
         `}
       </style>
-      <Header />
       
-      <div className="px-6 mb-30 pt-4 md:pt-10 max-w-7xl mx-auto bg-transparent">
+      <div className="px-6 mb-30 pt-4 md:pt-33 max-w-7xl mx-auto bg-transparent">
         <h2
           className="md:text-7xl text-4xl sm:text-5xl text-[#1f3cfc] font-bold mb-18 text-center"
           style={{
@@ -198,7 +182,20 @@ const ReposPage = () => {
             ))
           )}
         </div>
+
+        <a href= "/ContGuide.pdf" target = '_blank' className="flex justify-center mt-8">
+          <div className="relative group">
+            {/* Yellow shadow box */}
+            <div className="absolute -bottom-2 -right-2 w-full h-full bg-yellow-400 z-0"></div>
+
+            {/* Foreground button */}
+            <div className="relative z-10 border-2 border-black bg-white px-4 py-2 md:px-6 md:py-4 font-bold text-black text-lg md:text-xl transition-transform duration-300 group-hover:scale-103 space-grotesk-regular">
+              Contribution Guidelines
+            </div>
+          </div>
+        </a>
       </div>
+      
       <Footer />
     </div>
   );
