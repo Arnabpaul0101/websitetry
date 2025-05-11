@@ -14,7 +14,7 @@ import Loading from '../components/dashboardcomp/Loading';
 
 const Dashboardpage = () => {
   const [open, setOpen] = useState(true);
-  const [activeItem, setActiveItem] = useState('overview');
+  const [activeItem, setActiveItem] = useState('profile');
   // const {dashboardData, setDashboardData} = useDashboard();
 
 

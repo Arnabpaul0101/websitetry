@@ -37,19 +37,35 @@ const Commits = () => {
 
   return (
     <div
-      className="min-h-screen w-full bg-fixed bg-cover bg-center px-4 py-10 md:px-20"
+      className="min-h-screen space-grotesk-regular w-full bg-fixed bg-cover bg-center px-4 py-10 md:px-20"
       style={{
         backgroundImage: "url('/images/repopagebg2.png')",
       }}
     >
-      <h2 className="text-xl md:text-5xl font-semibold mb-4 text-center text-[#ee540e] font-title">Recent PRs</h2>
+      <h2 className="text-3xl md:text-5xl font-semibold mb-4 text-center text-[#ee540e]"
+      style={{
+        fontFamily: "CameraObscuraDEMO, sans-serif",
+        letterSpacing: 2,
+        textShadow: `
+          -2px -2px 0 #fff,
+          2px -2px 0 #fff,
+          -2px 2px 0 #fff,
+          2px 2px 0 #fff,
+          0px 2px 0 #fff,
+          2px 0px 0 #fff,
+          0px -2px 0 #fff,
+          -2px 0px 0 #fff
+        `,
+      }}
+
+      >Recent PRs</h2>
       <div className="max-w-6xl mx-auto bg-white/80 backdrop-blur-md p-4 md:p-6 border rounded-md shadow-md">
 
         <div className="flex justify-center mb-6 gap-4">
           <button
             onClick={() => setFilterState('closed')}
-            className={`px-4 py-2 rounded-md border text-sm md:text-base ${filterState === 'closed'
-              ? 'bg-blue-600 text-white'
+            className={`px-4 py-2 rounded-md border cursor-pointer text-sm md:text-base ${filterState === 'closed'
+              ? 'bg-[#1f3cfc] text-white'
               : 'bg-white text-gray-700 border-gray-300'
               }`}
           >
@@ -57,7 +73,7 @@ const Commits = () => {
           </button>
           <button
             onClick={() => setFilterState('open')}
-            className={`px-4 py-2 rounded-md border text-sm md:text-base ${filterState === 'open'
+            className={`px-4 py-2 rounded-md border cursor-pointer text-sm md:text-base ${filterState === 'open'
               ? 'bg-blue-600 text-white'
               : 'bg-white text-gray-700 border-gray-300'
               }`}
@@ -81,7 +97,7 @@ const Commits = () => {
                     href={pr.html_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-semibold md:text-lg text-sm text-blue-600 hover:underline"
+                    className="font-semibold md:text-lg text-sm text-[#1f3cfc] hover:underline"
                   >
                     {pr.title}
                   </a>

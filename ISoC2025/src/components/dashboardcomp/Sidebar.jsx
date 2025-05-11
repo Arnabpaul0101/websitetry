@@ -76,7 +76,7 @@ const Sidebar = ({ activeItem, setActiveItem, open, setOpen }) => {
                                     e.preventDefault();
                                     setActiveItem(item.id);
                                 }}
-                                className={`w-full ${activeItem !== item.id && 'hover:bg-[#f7b801]'} 
+                                className={`w-full ${activeItem !== item.id && 'hover:bg-[#eeeeee]'} 
                                 text-black hover:rounded-sm active:bg-[#fff] active:rounded-sm px-3 py-0.5 ${activeItem === item.id ? 'bg-[#1e3ffa] text-white rounded-sm' : ''}`}
                             >
                                 <li className="flex items-center gap-4 py-2 justify-start">
@@ -95,7 +95,7 @@ const Sidebar = ({ activeItem, setActiveItem, open, setOpen }) => {
                     <button
                         key={item.id}
                         onClick={() => setActiveItem(item.id)}
-                        className={`p-3 rounded-sm ${activeItem === item.id ? 'text-[#000] bg-[#f7b801]' : 'text-gray-500'} hover:text-[#000] transition-colors duration-200`}
+                        className={`p-3 rounded-sm ${activeItem === item.id ? 'text-[#000] bg-[#bfbebe]' : 'text-gray-500'} hover:text-[#000] transition-colors duration-200`}
                     >
                         {item.icon}
                     </button>
