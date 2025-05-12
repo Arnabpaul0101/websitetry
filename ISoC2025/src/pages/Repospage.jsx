@@ -198,6 +198,17 @@ const ReposPage = () => {
             ))
           )}
         </div>
+        <a href= "/ContGuide.pdf" target = '_blank' className="flex justify-center mt-8">
+          <div className="relative group">
+            {/* Yellow shadow box */}
+            <div className="absolute -bottom-2 -right-2 w-full h-full bg-yellow-400 z-0"></div>
+
+            {/* Foreground button */}
+            <div className="relative z-10 border-2 border-black bg-white px-4 py-2 md:px-8 md:py-4 font-bold text-black text-lg md:text-2xl transition-transform duration-300 group-hover:scale-103 space-grotesk-regular">
+              Contribution Guidelines
+            </div>
+          </div>
+        </a>
       </div>
       <Footer />
     </div>
