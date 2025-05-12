@@ -79,9 +79,9 @@ function Navbar() {
 
   return (
     <div className={`navbar ${visible ? "visible" : "hidden"}`}>
-      <NavLink to="/" ><div className="navbar-logo-link" onClick={closeMenu}>
+      <NavLink to="/" className="navbar-logo-link" onClick={closeMenu}>
         <img src={logo} alt="Logo" className="navbar-logo" />
-      </div></NavLink>
+      </NavLink>
 
       {/* Desktop Links */}
       <div className="navbar-links">

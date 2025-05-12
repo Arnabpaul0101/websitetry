@@ -34,8 +34,6 @@ body.menu-open {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: .75rem;
-  flex-wrap: nowrap;
   padding: 0 2rem;
   z-index: 1000;
   border: 1px solid rgba(16, 15, 15, 0.36);
@@ -55,18 +53,9 @@ body.menu-open {
 }
 
 /* === Logo Styles === */
-.navbar-logo-link{
-  position: relative;
-  height: 70px;
-  flex-shrink: 0;
-  width: 75px;
-
-}
 .navbar-logo {
-  height:100%;
-  width: 100%;
-  position: absolute;
-  object-fit: contain; 
+  height: 80px;
+  width: 80px;
   transition: transform 0.3s ease;
   
 }
@@ -89,7 +78,7 @@ body.menu-open {
 .navbar-list {
   display: flex;
   list-style: none;
-  gap: 1.75rem;
+  gap: 2rem;
   font-weight: bold;
   font-size: 1.3rem;
   margin: 0;
@@ -311,14 +300,8 @@ hr {
     height: 62px;
     top: 0;
     box-shadow: 0;
-
   }
-
-  .navbar-logo-link{
-    height: 62px;
-    width: 62px;
-  }
- 
+  
   .navbar-links {
     display: none;
   }
