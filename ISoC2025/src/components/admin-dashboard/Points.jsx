@@ -89,7 +89,7 @@ const Points = () => {
                 <input
                     type="text"
                     placeholder="Search users..."
-                    className="w-full p-3 rounded-md bg-white text-black mb-6 focus:outline-none border border-gray-600"
+                    className="w-full p-3 rounded-md bg-white text-black mb-6 focus:outline-none focus:ring-2 focus:ring-[#aa93ed] border border-gray-600"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
