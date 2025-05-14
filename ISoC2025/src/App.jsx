@@ -9,13 +9,14 @@ import Sponsorspage from "./pages/Sponsorspage";
 import { AuthProvider } from "./context/Authcontext";
 import RepoPreview from "./pages/Repopreviewpage";
 import Dashboard from "./pages/Dashboardpage";
+import ADashboard from "./pages/ADashboard";
 import ProtectedRoute from "./components/Protectedroutes";
-import {Toaster} from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
     <>
-      <Toaster 
+      <Toaster
         position="top-center"
         toastOptions={{
           success: {
@@ -62,11 +63,18 @@ const App = () => {
                   <Dashboard />
                 </ProtectedRoute>
               }
+
+            />
+            <Route
+              path="/admin-dashboard"
+              element={
+                <ADashboard />
+              }
             />
           </Routes>
         </AuthProvider>
 
-        
+
       </main>
     </>
   );
