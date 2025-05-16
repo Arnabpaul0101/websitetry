@@ -16,14 +16,17 @@ const Points = () => {
             return;
         }
 
-        // Map merged PRs to entries with points
-        const entries = prs.map(pr => ({
-            username: pr.user?.login,
-            avatar: pr.user?.avatar_url,
-            prTitle: pr.title,
-            prUrl: pr.html_url,
-            points: 0,
-        })).filter(entry => entry.username); // Filter out any without username
+        // Only include PRs that are both merged and closed
+        const entries = prs
+            .filter(pr => pr.state === 'closed')
+            .map(pr => ({
+                username: pr.user?.login,
+                avatar: pr.user?.avatar_url,
+                prTitle: pr.title,
+                prUrl: pr.html_url,
+                points: 0,
+            }))
+            .filter(entry => entry.username);
 
         setUserPRs(entries);
     }, [prs]);
@@ -42,9 +45,7 @@ const Points = () => {
     const handlePointsSave = (index) => {
         const updated = [...userPRs];
         const parsedPoints = parseInt(newPoints, 10);
-        if (!isNaN(parsedPoints)) {
-            updated[index].points = parsedPoints;
-        }
+        updated[index].points = isNaN(parsedPoints) ? 0 : parsedPoints;
         setUserPRs(updated);
         setEditingIndex(null);
         setNewPoints('');
@@ -137,9 +138,9 @@ const Points = () => {
                                                             if (e.key === 'Enter') handlePointsSave(index);
                                                             if (e.key === 'Escape') setEditingIndex(null);
                                                         }}
-                                                        onBlur={() => setEditingIndex(null)}
+                                                        onBlur={() => handlePointsSave(index)}
                                                         autoFocus
-                                                        className="bg-[#2b2f40] text-white p-1 rounded w-20 focus:outline-none"
+                                                        className="bg-[#999999] text-white p-1 rounded w-20 focus:outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                                                     />
                                                 ) : (
                                                     <span
