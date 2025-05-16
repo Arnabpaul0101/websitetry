@@ -23,9 +23,9 @@ const Header = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const isMaintainer = user?.displayName &&
+  const isMaintainer = user?.username &&
     maintainers.some(
-      (name) => name.toLowerCase() === user.displayName.toLowerCase()
+      (name) => name.toLowerCase() === user.username.toLowerCase()
     );
 
   return (
