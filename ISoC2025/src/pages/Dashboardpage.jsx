@@ -52,8 +52,8 @@ const Dashboardpage = () => {
       // case 'performance':
       //   return <Performance />;
       case 'commits':
-        return <Commits/>;
-      
+        return <Commits />;
+
       default:
         return <Profile />;
     }
@@ -63,9 +63,8 @@ const Dashboardpage = () => {
     <section className="flex w-full font-sans bg-[#eeeeee] text-[#000">
       <Sidebar open={open} setOpen={setOpen} activeItem={activeItem} setActiveItem={setActiveItem} />
       <main
-        className={`transition-all duration-300 ease-in-out w-full ${
-          open ? 'md:ml-[17%]' : 'md:ml-17'
-        } md:pb-0 pb-14 pt-28`}
+        className={`transition-all duration-300 ease-in-out w-full ${open ? 'md:ml-[17%]' : 'md:ml-17'
+          } md:pb-0 pb-14 pt-28`}
       >
         {renderContent()}
       </main>

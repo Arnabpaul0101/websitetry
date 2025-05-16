@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { usePRContext } from "../../context/PRProvider";
 
 const Points = () => {
-    const { prs } = usePRContext();
+    const { prsByStatus } = usePRContext();
+    const prs = prsByStatus.merged || [];
 
     const [userPRs, setUserPRs] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -10,23 +11,19 @@ const Points = () => {
     const [newPoints, setNewPoints] = useState('');
 
     useEffect(() => {
-        if (prs.length === 0) return;
+        if (prs.length === 0) {
+            setUserPRs([]);
+            return;
+        }
 
-        const mergedPRs = prs.filter(pr => pr.merged);
-        const entries = [];
-
-        mergedPRs.forEach(pr => {
-            const login = pr.user?.login;
-            if (login) {
-                entries.push({
-                    username: login,
-                    avatar: pr.user.avatar_url,
-                    prTitle: pr.title,
-                    prUrl: pr.html_url,
-                    points: 10
-                });
-            }
-        });
+        // Map merged PRs to entries with points
+        const entries = prs.map(pr => ({
+            username: pr.user?.login,
+            avatar: pr.user?.avatar_url,
+            prTitle: pr.title,
+            prUrl: pr.html_url,
+            points: 0,
+        })).filter(entry => entry.username); // Filter out any without username
 
         setUserPRs(entries);
     }, [prs]);
@@ -62,7 +59,7 @@ const Points = () => {
                 backgroundSize: "100%",
             }}
         >
-            <div className="min-h-screen bg-transparent text-black p-4 sm:p-8 pt-12 font-body">
+            <div className="min-h-screen bg-transparent text-black px-6 py-7 pt-8 font-body">
                 <h1
                     className="text-2xl sm:text-4xl md:text-5xl font-bold mb-6 text-center font-title text-[#ee540e]"
                     style={{
@@ -99,12 +96,12 @@ const Points = () => {
                 ) : (
                     <div className="w-full overflow-x-auto">
                         <table className="min-w-[600px] w-full text-left bg-white border border-gray-600 rounded-md">
-                            <thead className="text-black border-b border-gray-600">
+                            <thead className="text-black bg-[#d7d7d7] border-b border-gray-600">
                                 <tr>
-                                    <th className="py-3 px-4 whitespace-nowrap">Username</th>
-                                    <th className="py-3 px-4 whitespace-nowrap">PR Title</th>
-                                    <th className="py-3 px-4 whitespace-nowrap">Points</th>
-                                    <th className="py-3 px-4 whitespace-nowrap">Actions</th>
+                                    <th className="py-5 px-4 whitespace-nowrap">Username</th>
+                                    <th className="py-5 px-4 whitespace-nowrap">PR Title</th>
+                                    <th className="py-5 px-4 whitespace-nowrap">Points</th>
+                                    <th className="py-5 px-4 whitespace-nowrap">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -114,7 +111,12 @@ const Points = () => {
                                     )
                                     .map((entry, index) => (
                                         <tr key={index} className="border-b border-gray-700 hover:bg-[#eeeeee]">
-                                            <td className="py-4 px-4 font-semibold">{entry.username}</td>
+                                            <td className="py-4 px-4 font-semibold">
+                                                <span className="flex items-center gap-2">
+                                                    <img src={entry.avatar} alt="avatar" className="h-5 rounded-full" />
+                                                    {entry.username}
+                                                </span>
+                                            </td>
                                             <td className="py-4 px-4 text-[#1e3ffa] max-w-xs truncate">
                                                 <a
                                                     href={entry.prUrl}
