@@ -3,7 +3,7 @@ import { useAuth } from "../context/Authcontext";
 import { Link } from "react-router-dom";
 import { Github } from "lucide-react";
 
-const maintainers = ['PrithwisK07'];
+const maintainers = ['PrithwisK07', 'Atul-k-m'];
 
 const Header = () => {
   const { user, login, logout } = useAuth();
@@ -65,14 +65,7 @@ const Header = () => {
           {/* Dropdown */}
           {dropdownOpen && (
             <div className="absolute right-0 mt-2 w-35 md:w-45 bg-white border border-gray-200 font-semibold shadow-sm z-50">
-              <Link
-                to="/dashboard"
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                onClick={() => setDropdownOpen(false)}
-              >
-                Dashboard
-              </Link>
-              {isMaintainer && (
+              {isMaintainer ? (
                 <Link
                   to="/admin-dashboard"
                   className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
@@ -80,7 +73,13 @@ const Header = () => {
                 >
                   Admin
                 </Link>
-              )}
+              ) : (<Link
+                to="/dashboard"
+                className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                onClick={() => setDropdownOpen(false)}
+              >
+                Dashboard
+              </Link>)}
               <button
                 onClick={() => {
                   logout();
