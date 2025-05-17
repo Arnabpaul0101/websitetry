@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { GitPullRequest } from "lucide-react";
 import { usePRContext } from "../../context/PRProvider";
+import { BeatLoader } from "react-spinners";
 
 const CheckSubmission = () => {
     const [sortOrder, setSortOrder] = useState("desc");
@@ -118,7 +119,18 @@ const CheckSubmission = () => {
                 </div>
 
                 {loading ? (
-                    <p>Loading PRs...</p>
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        gap: '10px',
+                        alignItems: 'center',
+                        height: '100%', // or a fixed height like '200px'
+                        width: '100%', 
+                         //optional, helps if inside a small container
+                    }}>
+                        <p className="text-2xl font-bold" > Loading PR's</p>
+                        <BeatLoader color="#5972f1" size={20} />
+                    </div>
                 ) : filtered.length > 0 ? (
                     <>
                         {/* Desktop Table */}
